@@ -7,3 +7,4 @@ gem "sqlite3" # added this based on the error message: Gem::LoadError: can't act
 gem "pry"
 gem "require_all"
 # gem 'rake'
+
