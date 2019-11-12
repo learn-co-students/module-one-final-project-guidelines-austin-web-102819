@@ -21,7 +21,7 @@ def user_login(logged_in_user)
     user = User.get_user(logged_in_user)
     # binding.pry
     if user
-        puts "Hello #{john.first_name}"
+        puts "Hello #{user.first_name}"
     else
         puts "User does not exist."
     end
