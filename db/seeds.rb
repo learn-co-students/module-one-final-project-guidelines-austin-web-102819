@@ -1,0 +1,11 @@
+faith = User.create(first_name: "faith")
+mei = User.create(first_name: "mei")
+brittany = User.create(first_name: "brittany")
+buford = User.create(first_name: "buford")
+grant = User.create(first_name: "grant")
+heidi = User.create(first_name: "heidi")
+rachel = User.create(first_name: "rachel")
+mason = User.create(first_name: "mason")
+yinning = User.create(first_name: "yinning")
+adrian = User.create(first_name: "adrian")
+
