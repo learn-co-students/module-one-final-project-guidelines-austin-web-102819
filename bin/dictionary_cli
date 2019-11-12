@@ -2,3 +2,4 @@ require_relative '../config/environment.rb'
 
 user_name
 search_word
+save_word
