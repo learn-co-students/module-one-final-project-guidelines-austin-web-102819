@@ -6,7 +6,15 @@ class User < ActiveRecord::Base
 
 
     def self.get_user(first_name)
-        # binding.pry
         User.find_by(first_name: first_name.downcase)
+    end
+
+    def get_meal_by_user
+        binding.pry
+        self.meals.all
+    end
+
+    def update
+        self.save
     end
 end
