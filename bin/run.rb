@@ -99,28 +99,4 @@ def find_meal
     # TODO: find meal
 end
 
-#make a request to the spoonular api using 
-#vegetarian, pescetarian, no dietary restriction
-# test_url = "https://api.spoonacular.com/recipes/random/?apiKey=99f8e9d43fb8450b981d1e9a3a659d50"
 
-
-def make_request(test_url)
-        response = RestClient.get(test_url)
-        ingredient_array = JSON(response)["recipes"][0]["extendedIngredients"]  
-        get_ingredient_array(ingredient_array)
-end 
-
-def get_ingredient_array(ingredient_array)
-
-    # 1) recipe_name = find the name of the recipe
-    # 2) cost = find cost
-    ingredient_array.select do |k|
-        binding.pry
-    end
-  
- end 
-
-make_request(TEST_URL)
-#Recipe.new(name: "", ingredient: k["original"])
-#     ingredient_array.select {|k,v| k == "original"}
-#     binding.pry
