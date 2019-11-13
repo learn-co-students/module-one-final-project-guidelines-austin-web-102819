@@ -20,14 +20,28 @@ end
 def login_user
     puts "What is your username?"
     username = gets.chomp
-    puts "Welcome back #{username}!"
+    if User.find_by(username: username)
+        puts "Welcome back #{username}!"
+    else 
+        puts "Sorry, username does not exist."
+        login_or_create_user
+    end 
 end 
+
+# Method is printing unexpected message :
+# D, [2019-11-13T10:55:58.329297 #35501] DEBUG -- :    (1.1ms)  SELECT sqlite_version(*)
+# D, [2019-11-13T10:55:58.657780 #35501] DEBUG -- :   User Load (0.3ms)  SELECT "users".* FROM "users" WHERE "users"."username" = ? LIMIT ?  [["username", "Jimbo"], ["LIMIT", 1]]"
 
 def create_user
     puts "Create a username: "
     username = gets.chomp
+    if User.find_by(username: username)
+        puts "Sorry, that username is taken. Be more .uniq, playa."
+        create_user
+    else
     User.create(username: username)
     puts "Welcome #{username}!"
+    end
 end 
 
 def present_menu_options
@@ -46,4 +60,3 @@ login_or_create_user
 present_menu_options
 end 
 
-run
