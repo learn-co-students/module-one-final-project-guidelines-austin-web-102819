@@ -5,11 +5,7 @@ require 'pry'
 def welcome_user
     puts "Welcome to Ticketmaster Lite!"
     puts "==========================="
-    6.times do
-        puts
-    end  
-
-
+   space(2)
 end 
 
 def get_input
@@ -36,6 +32,8 @@ def login_user
     if User.find_by(username: username)
         logged_in_user = User.find_by(username: username)
         puts "Welcome back #{username}!"
+        line
+        space(1)
         $logged_in = logged_in_user.id
     else 
         puts "Sorry, username does not exist."
@@ -63,22 +61,25 @@ end
 
 
 def present_menu_options
+    puts "Pick a number. Any number. "
+    space(2)
     puts '1. search for events by city'
     puts '2. search for events by performer'
     puts '3. pick an event for me'
     puts '4. host an event'
     puts '5. view my event calander'
     puts '6. exit'
-    puts ' '
-    puts 'Pick and option'
+    space(1)
 end 
 
 def pick_option
     input = get_input
     if input == '1'
-        search_by_city
-    # elsif input == 2
-    #     search_by_performer
+        events_array = search_by_city
+        display_events(events_array)
+     elsif input == '2'
+        events_array = search_by_performer
+        display_events(events_array)
     # elsif input == 3
     #     random_event
     # elsif input == 4
@@ -111,17 +112,30 @@ def search_by_city
     response = RestClient.get(url)
     events = JSON.parse(response)["_embedded"]["events"]
     events_array = events[0...19]
-    events_array.each do |event|
+    events_array
+end
+
+def search_by_performer
+    puts "Where would you like to see?"
+    performer = get_input
+    url = "https://app.ticketmaster.com/discovery/v2/attractions?apikey=pyLDDCYURYJ8LZfAUnOayESRsPBTWnKM&keyword="+ performer +"&locale=*"
+    response = RestClient.get(url)
+    binding.pry
+    events = JSON.parse(response)["_embedded"]["events"]
+    events_array = events[0...19]
+    events_array
+end
+
+def display_events(events_array)
+    events_array do |event|
         line
         p event["name"]
         p event ["dates"]["start"]["localDate"]
         p event["url"]
         line
         space(2)
-
-    end 
-    search_by_city
-end
+    end
+end 
 
 # title = events_array[0]["name"]
 # event_url = events_array[0]["url"]
