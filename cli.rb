@@ -1,6 +1,15 @@
+require 'rest-client'
+require 'json'
+require 'pry'
+
 def welcome_user
-    puts "Welcome to Eventbrite Lite!"
+    puts "Welcome to Ticketmaster Lite!"
     puts "==========================="
+    6.times do
+        puts
+    end  
+
+
 end 
 
 def login_or_create_user
@@ -51,8 +60,8 @@ end
 
 def present_menu_options
     puts ' '
-    puts '1. search for all events'
-    puts '2. search for free events'
+    puts '1. search for events by city'
+    puts '2. search for events by performer'
     puts '3. pick an event for me'
     puts '4. host an event'
     puts '5. view my event calander'
@@ -60,6 +69,11 @@ def present_menu_options
     puts ' '
 end 
 
+
+    # $key = pyLDDCYURYJ8LZfAUnOayESRsPBTWnKM
+    # response = RestClient.get
+    # EVENTBRITE_API_BASE_URL = response_string = RestClient.get('https://app.ticketmaster.com/discovery/v2/events.json?apikey='+ $key + '&city=' + city + '&size=25&localStartDateTime=' + date + 'T00:00:00,' + date + 'T23:59:59')
+    # response_hash = JSON.parse(response_string)
 
 def run
 welcome_user
