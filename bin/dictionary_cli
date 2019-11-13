@@ -1,5 +1,7 @@
 require_relative '../config/environment.rb'
 
-user_name
-search_word
-save_word
+
+welcome
+user_object = user_name
+word_object = search_word
+save_word(user_object, word_object)
