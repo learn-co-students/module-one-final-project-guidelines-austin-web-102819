@@ -1,4 +1,5 @@
 require 'pry'
+
 # Output welcome message
 puts "Welcome to the WordBank App!"
 puts "==========================="
