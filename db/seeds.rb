@@ -1,0 +1,62 @@
+
+
+mason = User.create(name: "Mason")
+q1 = Question.create(question: "How many rings does Phil Jackson have?")
+a11 = Answer.create(answer: "5", correct: 0, question_id: 1)
+a12 = Answer.create(answer: "6", correct: 0, question_id: 1)
+a13 = Answer.create(answer: "3", correct: 0, question_id: 1)
+a14 = Answer.create(answer: "11", correct: 1, question_id: 1)
+
+q2 = Question.create(question: "How many regular season Most Valuable Player awards did Kobe Bryant win?")
+a21 = Answer.create(answer: "5", correct: 0, question_id: 2)
+a22 = Answer.create(answer: "2", correct: 0, question_id: 2)
+a23 = Answer.create(answer: "1", correct: 1, question_id: 2)
+a24 = Answer.create(answer: "3", correct: 0, question_id: 2)
+
+q3 = Question.create(question: "How many championships do the Lakers have?")
+a31 = Answer.create(answer: "16", correct: 1, question_id: 3)
+a32 = Answer.create(answer: "15", correct: 0, question_id: 3)
+a33 = Answer.create(answer: "10", correct: 0, question_id: 3)
+a34 = Answer.create(answer: "26", correct: 0, question_id: 3)
+
+q4 = Question.create(question: "How many championships do the Bulls have?")
+a41 = Answer.create(answer: "5", correct: 0, question_id: 4)
+a42 = Answer.create(answer: "6", correct: 1, question_id: 4)
+a43 = Answer.create(answer: "7", correct: 0, question_id: 4)
+a44 = Answer.create(answer: "8", correct: 0, question_id: 4)
+
+q5 = Question.create(question: "What is the most number of points Kobe Bryant scored in a game?")
+a51 = Answer.create(answer: "50", correct: 0, question_id: 5)
+a52 = Answer.create(answer: "55", correct: 0, question_id: 5)
+a53 = Answer.create(answer: "81", correct: 1, question_id: 5)
+a54 = Answer.create(answer: "100", correct: 0, question_id: 5)
+
+q6 = Question.create(question: "What is the most number of points Michael Jordan scored in a game?")
+a61 = Answer.create(answer: "39", correct: 0, question_id: 6)
+a62 = Answer.create(answer: "60", correct: 0, question_id: 6)
+a63 = Answer.create(answer: "63", correct: 1, question_id: 6)
+a64 = Answer.create(answer: "74", correct: 0, question_id: 6)
+
+q7 = Question.create(question: "Which team has won the most NBA championships?")
+a71 = Answer.create(answer: "Boston Celtics", correct: 1, question_id: 7)
+a72 = Answer.create(answer: "LA Lakers", correct: 0, question_id: 7)
+a73 = Answer.create(answer: "NY Knicks", correct: 0, question_id: 7)
+a74 = Answer.create(answer: "Chicago Bulls", correct: 0, question_id: 7)
+
+q8 = Question.create(question: "All of the following NBA teams have won a championship EXCEPT:")
+a81 = Answer.create(answer: "Dallas Mavericks", correct: 0, question_id: 8)
+a82 = Answer.create(answer: "NY Knicks", correct: 0, question_id: 8)
+a83 = Answer.create(answer: "LA Lakers", correct: 0, question_id: 8)
+a84 = Answer.create(answer: "Charlotte Hornets", correct: 1, question_id: 8)
+
+q9 = Question.create(question: "Which of the following NBA players has racked up the most rebounds?")
+a91 = Answer.create(answer: "Tim Duncan", correct: 1, question_id: 9)
+a92 = Answer.create(answer: "Shaq", correct: 0, question_id: 9)
+a93 = Answer.create(answer: "Dwight Howard", correct: 0, question_id: 9)
+a94 = Answer.create(answer: "Kevin Garnett", correct: 0, question_id: 9)
+
+q10 = Question.create(question: "Who is the NBA’s All-Time assist leader?")
+a01 = Answer.create(answer: "Steve Nash", correct: 0, question_id: 10)
+a02 = Answer.create(answer: "John Stockton", correct: 1, question_id: 10)
+a03 = Answer.create(answer: "Magic Johnson", correct: 0, question_id: 10)
+a04 = Answer.create(answer: "Jason Kidd", correct: 0, question_id: 10)
