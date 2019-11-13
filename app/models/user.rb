@@ -25,6 +25,6 @@ class User < ActiveRecord::Base
     def display_meal
         # binding.pry
         self.meals.all.map {|i| Recipe.find_by(id: i.recipe_id)} if self.meals.count > 0
-        # binding.pry
+        binding.pry
     end
 end
