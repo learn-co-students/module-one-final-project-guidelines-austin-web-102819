@@ -10,11 +10,15 @@ class User < ActiveRecord::Base
     end
 
     def get_meal_by_user
-        binding.pry
         self.meals.all
     end
 
     def update
         self.save
+    end
+
+    def delete_meal
+        meal = self.meals.all
+        meal.destroy_all
     end
 end
