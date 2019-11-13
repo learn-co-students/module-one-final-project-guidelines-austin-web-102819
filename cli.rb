@@ -3,10 +3,14 @@ def welcome_user
     puts "==========================="
 end 
 
+def get_input
+    gets.chomp
+end
+
 def login_or_create_user
     puts "Do you have an account with us?
         (y/n)"
-    input = gets.chomp
+    input = get_input
     if input == 'y'
         login_user
     elsif input == 'n'
@@ -19,7 +23,7 @@ end
 
 def login_user
     puts "Please enter your username?"
-    username = gets.chomp
+    username = get_input
     if User.find_by(username: username)
         puts "Welcome back #{username}!"
     else 
@@ -54,12 +58,18 @@ def present_menu_options
     puts '5. view my event calander'
     puts '6. exit'
     puts ' '
+
 end 
+
+def search_for_all_events
+    
+end
 
 
 def run
 welcome_user
 login_or_create_user
 present_menu_options
+
 end 
 
