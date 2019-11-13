@@ -63,7 +63,6 @@ end
 
 
 def present_menu_options
-    puts ' '
     puts '1. search for events by city'
     puts '2. search for events by performer'
     puts '3. pick an event for me'
@@ -71,23 +70,78 @@ def present_menu_options
     puts '5. view my event calander'
     puts '6. exit'
     puts ' '
-
+    puts 'Pick and option'
 end 
 
-def search_for_all_events
-    
+def pick_option
+    input = get_input
+    if input == '1'
+        search_by_city
+    # elsif input == 2
+    #     search_by_performer
+    # elsif input == 3
+    #     random_event
+    # elsif input == 4
+    #     create_event
+    # elsif input == 5
+    #     user.event_planner
+    # elsif input == 6
+    #     puts "Thank you!"
+    else
+       puts "Invalid"
+       pick_option
+    end 
+end 
+
+def space(num)
+    num.times do
+        puts
+    end 
+end 
+
+
+def line
+    puts "----------------------------"
+end 
+
+def search_by_city
+    puts "Where would you like to look?"
+    city = get_input
+    url = "https://app.ticketmaster.com/discovery/v2/events?apikey=pyLDDCYURYJ8LZfAUnOayESRsPBTWnKM&locale=*&city="+ city
+    response = RestClient.get(url)
+    events = JSON.parse(response)["_embedded"]["events"]
+    events_array = events[0...19]
+    events_array.each do |event|
+        line
+        p event["name"]
+        p event ["dates"]["start"]["localDate"]
+        p event["url"]
+        line
+        space(2)
+
+    end 
+    search_by_city
 end
+
+# title = events_array[0]["name"]
+# event_url = events_array[0]["url"]
+# event_date = events_array[0]["dates"]["start"]["localDate"]
+
+def search_by_performer
+    puts "Who would like to see?"
+    performer = get_input
+end 
 
 
     # $key = pyLDDCYURYJ8LZfAUnOayESRsPBTWnKM
-    # response = RestClient.get
+    # response = RestClient.get(url)
     # EVENTBRITE_API_BASE_URL = response_string = RestClient.get('https://app.ticketmaster.com/discovery/v2/events.json?apikey='+ $key + '&city=' + city + '&size=25&localStartDateTime=' + date + 'T00:00:00,' + date + 'T23:59:59')
-    # response_hash = JSON.parse(response_string)
+    # response_hash = JSON.parse(response)
 
 def run
 welcome_user
 login_or_create_user
 present_menu_options
-
+pick_option
 end 
 
