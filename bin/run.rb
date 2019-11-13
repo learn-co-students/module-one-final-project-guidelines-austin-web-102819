@@ -31,7 +31,7 @@ def user_login(logged_in_user)
         when "no"
             # get and delete current meal and find new meal
             meal = get_existing_meal(user)
-            delete_existing_meal(meal)
+            delete_existing_meal(user)
             show_diet_preference(user)
             meal = find_meal
         else
@@ -56,16 +56,14 @@ def get_existing_meal(user)
     meal = user.get_meal_by_user
 end
 
-def delete_existing_meal(meal)
-    # TODO: delete existing meal
-    puts "meal deleted"
+def delete_existing_meal(user)
+    user.delete_meal
 end
 
 def show_diet_preference(user)
     puts_to_screen("Your diet preference is #{user.diet_preference}. Do you want to change it? (YES/NO)")
     user_input_for_diet_preference = get_user_input()
 
-    # binding.pry
     case user_input_for_diet_preference.downcase
     when "yes"
         puts_to_screen("Enter 1. Vegetarian or 2. Non-Vegetarian (1/2)")
@@ -88,6 +86,8 @@ def show_diet_preference(user)
     else
         puts_to_screen("Invalid input.")
     end
+
+    find_meal
 end
 
 def find_meal
