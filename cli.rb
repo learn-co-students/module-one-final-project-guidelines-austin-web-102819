@@ -21,7 +21,9 @@ def login_user
     puts "What is your username?"
     username = gets.chomp
     if User.find_by(username: username)
+        logged_in_user = User.find_by(username: username)
         puts "Welcome back #{username}!"
+        $logged_in = logged_in_user.id
     else 
         puts "Sorry, username does not exist."
         login_or_create_user
@@ -39,13 +41,14 @@ def create_user
         puts "Sorry, that username is taken. Be more .uniq, playa."
         create_user
     else
-    User.create(username: username)
+    logged_in_user = User.create(username: username)
     puts "Welcome #{username}!"
+    $logged_in = logged_in_user.id
     end
 end 
 
 def present_menu_options
-    puts "1. search for all events
+    puts  "1. search for all events
           2. search for free events
           3. pick an event for me 
           4. host an event
