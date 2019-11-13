@@ -37,7 +37,9 @@ def user_login(logged_in_user)
         else
             puts_to_screen("Invalid input.")
         end 
-        display_meal(meal)
+        
+        display_meal(user)
+        
     else
         puts_to_screen("User does not exist.")
     end
@@ -47,8 +49,23 @@ def puts_to_screen(message)
     puts message
 end
 
-def display_meal(meal)
-    puts_to_screen("Here is your meal! Bon appetit!")
+def display_meal(user)
+    
+    meal = user.display_meal
+    # binding.pry
+    if meal
+        i = 0
+        puts_to_screen("Here is your meal! Bon appetit!\n")
+        puts_to_screen("*** #{meal[0].name}\n")
+        meal.size.times do
+            puts_to_screen("\t#{meal[i].ingredient}\n")
+            i += 1
+        end
+
+        puts_to_screen("*** Cost per serving: #{meal[0].cost}\n")
+    else
+        puts_to_screen("You have no saved meal!\n")
+    end
     puts_to_screen("Goodbye!")
 end
 
