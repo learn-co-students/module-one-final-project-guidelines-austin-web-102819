@@ -3,4 +3,3 @@ require_relative '../cli'
 
 run
 
-puts "HELLO WORLD"
