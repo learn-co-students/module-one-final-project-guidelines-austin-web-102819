@@ -21,4 +21,10 @@ class User < ActiveRecord::Base
         meal = self.meals.all
         meal.destroy_all
     end
+
+    def display_meal
+        # binding.pry
+        self.meals.all.map {|i| Recipe.find_by(id: i.recipe_id)} if self.meals.count > 0
+        # binding.pry
+    end
 end
