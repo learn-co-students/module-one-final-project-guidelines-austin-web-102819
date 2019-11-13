@@ -1,4 +1,5 @@
 require 'bundler'
+require 'rest-client'
 Bundler.require
 
 
