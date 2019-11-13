@@ -21,7 +21,9 @@ def login_user
     puts "Please enter your username?"
     username = gets.chomp
     if User.find_by(username: username)
+        logged_in_user = User.find_by(username: username)
         puts "Welcome back #{username}!"
+        $logged_in = logged_in_user.id
     else 
         puts "Sorry, username does not exist."
         login_or_create_user
@@ -40,10 +42,12 @@ def create_user
         create_user
         puts ' '
     else
-    User.create(username: username)
+    logged_in_user = User.create(username: username)
     puts "Welcome #{username}!"
+    $logged_in = logged_in_user.id
     end
 end 
+
 
 def present_menu_options
     puts ' '
