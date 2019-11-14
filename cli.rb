@@ -1,7 +1,9 @@
 require_relative 'config/environment'
+require 'date'
 
 #welcomes the user
 def welcome_user
+    space(50)
     puts "Welcome to Ticketmaster Lite!"
     double_line
     space(1)
@@ -9,8 +11,8 @@ end
 
 #ask user if they have an account then login or create one
 def login_or_create_user
-    puts "Do you have an account with us?
-        (y/n)"
+    puts "Do you have an account with us? Type (y/n)"
+    line
     input = get_input
     if input == 'y'
         login_user
@@ -24,31 +26,40 @@ end
 
 #if user exsit this method logs user in
 def login_user
+    space(1)
     puts "Please enter your username."
+    line
+    space(1)
     username = get_input
     if User.find_by(username: username)
         logged_in_user = User.find_by(username: username)
+        space(1)
         puts "Welcome back #{username}!"
         line
         space(1)
         $logged_in = logged_in_user
     else 
         puts "Sorry, username does not exist."
+        line
         login_or_create_user
     end 
 end 
 
 #If user doesn't exsist create one else log in user
 def create_user
-    puts "Create a username:"
+    line
+    puts "Let's get you into the club! Create a unique username below:"
+    line
     username = gets.chomp
     if User.find_by(username: username)
         puts "Sorry, that username is taken! Be more .uniq, playa."
+        line
         create_user
         space(1)
     else
     logged_in_user = User.create(username: username)
-    puts "Welcome #{username}!"
+    space(1)
+    puts "Nice name, #{username}!"
     $logged_in = logged_in_user
     end
 end 
@@ -75,15 +86,14 @@ end
 
 #gives user a list of options to choose from
 def present_menu_options
-    puts "Pick a number. Any number."
     space(1)
-    puts '1. search for events by city'
-    puts '2. search by keyword'
-    puts '3. pick an event for me'
-    puts '4. host an event'
-    puts '5. view my event calander'
-    puts '6. Delete my account'
-    puts '7. exit'
+    puts "Choose an option from the list below."
+    space(1)
+    puts '1. Search for events by city'
+    puts '2. Search for events by artist or sports team'
+    puts '3. See what I have coming up'
+    puts '4. Delete my account'
+    puts '5. exit'
     space(1)
     pick_option
 end 
@@ -99,19 +109,16 @@ def pick_option
         attractions_array = search_by_keyword
         display_by_keyword(attractions_array)
         save_event_or_main_menu(attractions_array)
-    # elsif input == 3
-    #     random_event
-    # save_event_or_main_menu 
-    # elsif input == 4
-    #     create_event
-    # elsif input == 5
-    #     user.event_planner
-    elsif input == '6'
+     elsif input == '3'
+        display_user_events
+     elsif input == '4'
         delete_account
-    elsif input == '7'
-        puts "See ya later!"
+     elsif input == '5'
+        space(1)
+        puts "Thanks for checking us out. See ya later!"
         exit
-    else
+     else
+        space(1)
         invalid_input
         pick_option
     end
@@ -119,9 +126,12 @@ end
 
 #takes user input and searches; returns an array
 def search_by_city
+    space(1)
     puts "Where would you like to look?"
     city = get_input
-    url = "https://app.ticketmaster.com/discovery/v2/events?apikey=pyLDDCYURYJ8LZfAUnOayESRsPBTWnKM&locale=*&city="+ city
+    today = DateTime.new(2001,2,3,4,5,4)
+    p today
+    url = "https://app.ticketmaster.com/discovery/v2/events?apikey=pyLDDCYURYJ8LZfAUnOayESRsPBTWnKM&locale=*&city=#{city}&sort=date,asc"
     response = RestClient.get(url)
     events = JSON.parse(response)["_embedded"]["events"]
     events_array = events[0...20]
@@ -130,9 +140,10 @@ end
 
 #takes user input and searches; returns an array
 def search_by_keyword
+    space(1)
     puts "What do you want to search for?"
     keyword = get_input
-    url = "https://app.ticketmaster.com/discovery/v2/events?apikey=pyLDDCYURYJ8LZfAUnOayESRsPBTWnKM&keyword=#{keyword}&locale=en"
+    url = "https://app.ticketmaster.com/discovery/v2/events?apikey=pyLDDCYURYJ8LZfAUnOayESRsPBTWnKM&keyword=#{keyword}&locale=en&sort=date,asc"
     response = RestClient.get(url)
     attractions = JSON.parse(response)["_embedded"]["events"]
     attractions[0...20]
@@ -153,6 +164,9 @@ def display_events_by_city(events_array)
         line
         space(2)
     end
+    double_line
+    puts "To vist an event URL hold command and left click!"
+    double_line
 end 
 
 # takes the return of search_by method option 2 and displays them in a readable manner
@@ -166,28 +180,42 @@ def display_by_keyword(attractions_array)
         print "#{name} \n #{date} \n #{url} \n"
         if Event.find_by(event_type: url) == nil
             $event = create_event(name, date , url)
-        end 
+        end
         line
         space(2)
     end
+    double_line
+    puts "To vist an event URL hold command and left click!"
+    double_line
 end
 
 def save_event_or_main_menu(events_array)
-    puts "Would you like to save any of these events? Type 'y' to save an event or 'n' to go back to the main menu"
+    space(1)
+    puts "Would you like to save any of these events? Type 'y' to save an event or 'n' to go back to the main menu."
+    space(1)
     response = get_input
     if response == 'y'
+        space(1)
         puts 'To save an event please type the correlating number that corresponds with that event.'
         events_number = get_input.to_i
         url = events_array[events_number-1]["url"]
         event = Event.find_by(event_type: url)
         save_event(event.id)
-        # userevent.save => saves selected event to userevent table
-    
     elsif response == 'n'
         present_menu_options
     end
+end
 
-    
+def display_user_events
+    space(1)
+    puts "Here's a list of your events!"
+    puts "For more info and to even purchase a ticket hold command and left click the URL!"
+    line
+    space(1)
+    user_events = UserEvent.select{|event| event.user_id == $logged_in.id}
+    event_objects = user_events.map{|ueo| Event.find(ueo.event_id)}
+    event_objects.each_with_index { |eo, index| print  "#{index+1}. #{eo.name} \n #{eo.date} \n #{eo.event_type} \n" }
+
 end
 
 #====================================================================================================================
@@ -203,7 +231,13 @@ end
 
 #helper methods
 def get_input
-    gets.chomp
+    if $logged_in
+        print "#{$logged_in.username} > "
+        gets.chomp 
+    else
+        print "User > "
+        gets.chomp
+    end
 end
 
 #create methods
@@ -217,6 +251,7 @@ end
 
 #message helper methods
 def invalid_input
+    space(1)
     puts "Please enter a valid response"
 end
 
@@ -228,11 +263,11 @@ def space(num)
 end 
 
 def line
-    puts "----------------------------"
+    puts "-"*50
 end 
 
 def double_line
-    puts "============================="
+    puts "="*50
 end
 
 ### NOTES
