@@ -6,6 +6,10 @@ class User < ActiveRecord::Base
 
 
     def self.get_user(first_name)
+        # return empty array
+        # where(first_name: first_name.downcase)
+
+        # return nil
         User.find_by(first_name: first_name.downcase)
     end
 
@@ -23,8 +27,6 @@ class User < ActiveRecord::Base
     end
 
     def display_meal
-        # binding.pry
         self.meals.all.map {|i| Recipe.find_by(id: i.recipe_id)} if self.meals.count > 0
-        binding.pry
     end
 end

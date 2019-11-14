@@ -3,8 +3,6 @@ require 'rest-client'
 require 'json'
 require_relative '../config/environment'
 
-
-TEST_URL = "https://api.spoonacular.com/recipes/random/?apiKey=99f8e9d43fb8450b981d1e9a3a659d50"
 def run
     puts_to_screen("***** Welcome to Epicure Meal Planner *****\nKey in your first name")
     user_input = get_user_input()
@@ -25,6 +23,7 @@ end
 def user_login(logged_in_user)
     # binding.pry
     user = User.get_user(logged_in_user)
+    binding.pry
     
     if user
         puts_to_screen("Hello #{logged_in_user}. Do you want to have the same meal? (YES/NO)")
@@ -57,7 +56,6 @@ end
 def display_meal(user)
     
     meal = user.display_meal
-    # binding.pry
     if meal
         i = 0
         puts_to_screen("Here is your meal! Bon appetit!\n")
@@ -141,9 +139,7 @@ def get_ingredient_array(ingredient_array)
     Recipe.create_recipe(arr)
 end 
 
+run
 
 make_request(TEST_URL)
-#Recipe.new(name: "", ingredient: k["original"])
-#     ingredient_array.select {|k,v| k == "original"}
-#     binding.pry
 
