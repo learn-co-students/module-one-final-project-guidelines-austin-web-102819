@@ -63,16 +63,14 @@ def delete_account
         input = get_input
         if User.find_by(username: input) == $logged_in
             User.find_by(username: input).destroy
-            puts "Thank you. Come again!"
-            present_menu_options
+            puts "Sorry to see you go, come back soon!"
+            exit
         else
             puts "You jerk. You can only delete your account."
-            binding.pry
         end 
     else
-        present_menu_options
+        run
     end  
-
 end 
 
 #gives user a list of options to choose from
@@ -87,6 +85,7 @@ def present_menu_options
     puts '6. Delete my account'
     puts '7. exit'
     space(1)
+    pick_option
 end 
 
 #depending on the user input from main menu starts option flow
@@ -95,22 +94,27 @@ def pick_option
     if input == '1'
         events_array = search_by_city
         display_events_by_city(events_array)
-        
+        save_event_or_main_menu
      elsif input == '2'
         attractions_array = search_by_keyword
         display_by_keyword(attractions_array)
+        save_event_or_main_menu
     # elsif input == 3
     #     random_event
+    # save_event_or_main_menu 
     # elsif input == 4
     #     create_event
     # elsif input == 5
     #     user.event_planner
     elsif input == '6'
         delete_account
+    elsif input == '7'
+        puts "See ya later!"
+        exit
     else
         invalid_input
         pick_option
-    end 
+    end
 end 
 
 #takes user input and searches; returns an array
@@ -134,9 +138,6 @@ def search_by_keyword
     attractions[0...20]
 end
 
-# attractions[0]['name']
-# attractions[0]['url']
-
 #takes the return of search_by method option 1 and displays them in a readable manner
 def display_events_by_city(events_array)
     events_array.each_with_index do |event, index|
@@ -154,13 +155,8 @@ def display_events_by_city(events_array)
     end
 end 
 
-def create_event(name = nil, date = nil, url = nil)
-    Event.create(name: name, date: date, event_type: url)
-end 
-
 # takes the return of search_by method option 2 and displays them in a readable manner
 def display_by_keyword(attractions_array)
-    
     attractions_array.each_with_index do |attraction, index|
         puts (index+1).to_s + '.'
         line
@@ -176,6 +172,22 @@ def display_by_keyword(attractions_array)
     end
 end
 
+def save_event_or_main_menu
+    puts "Would you like to save any of these events? Type 'y to save an event or 'n to go back to the main menu"
+    x = get_input
+    if x == 'y'
+        puts 'To save one or more event(s) please type the correlating number(s) separated by commas. e.g. "1,2,3"'
+        # input = get_input
+        # if input == #something
+        #     #userevent.save => saves selected event to userevent table
+        # end
+    elsif x == 'n'
+        present_menu_options
+    end
+
+    
+end
+
 #====================================================================================================================
 #====================================================================================================================
 #THE BIG CHULUPA 
@@ -183,8 +195,6 @@ def run
 welcome_user
 login_or_create_user
 present_menu_options
-
-pick_option
 end
 #====================================================================================================================
 #====================================================================================================================
@@ -193,6 +203,11 @@ end
 def get_input
     gets.chomp
 end
+
+#create methods
+def create_event(name = nil, date = nil, url = nil)
+    Event.create(name: name, date: date, event_type: url)
+end 
 
 #message helper methods
 def invalid_input
