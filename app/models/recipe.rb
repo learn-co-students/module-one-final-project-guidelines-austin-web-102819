@@ -7,3 +7,7 @@ class Recipe < ActiveRecord::Base
 
     end
 end 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 41c601a7b74dba27fb3d4c52d621fa7673691848
