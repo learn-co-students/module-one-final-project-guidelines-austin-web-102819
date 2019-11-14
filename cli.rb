@@ -24,7 +24,7 @@ end
 
 #if user exsit this method logs user in
 def login_user
-    puts "Please enter your username?"
+    puts "Please enter your username."
     username = get_input
     if User.find_by(username: username)
         logged_in_user = User.find_by(username: username)
