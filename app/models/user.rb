@@ -27,6 +27,17 @@ class User < ActiveRecord::Base
     end
 
     def display_meal
-        self.meals.all.map {|i| Recipe.find_by(id: i.recipe_id)} if self.meals.count > 0
+        if self.meals.count > 0
+            self.meals.all.map do |i| 
+                Recipe.where(id: i.recipe_id)[0]
+                # binding.pry
+            end
+        end
+
+        # self.meals.all.map do |i| 
+        #     if self.meals.count > 0
+        #         Recipe.find_by(id: i.recipe_id)} 
+        #     end
+        # end
     end
 end
