@@ -63,16 +63,14 @@ def delete_account
         input = get_input
         if User.find_by(username: input) == $logged_in
             User.find_by(username: input).destroy
-            puts "Thank you. Come again!"
-            present_menu_options
+            puts "Sorry to see you go, come back soon!"
+            exit
         else
             puts "You jerk. You can only delete your account."
-            binding.pry
         end 
     else
-        present_menu_options
+        run
     end  
-
 end 
 
 #gives user a list of options to choose from
@@ -87,6 +85,7 @@ def present_menu_options
     puts '6. Delete my account'
     puts '7. exit'
     space(1)
+    pick_option
 end 
 
 #depending on the user input from main menu starts option flow
@@ -95,22 +94,27 @@ def pick_option
     if input == '1'
         events_array = search_by_city
         display_events_by_city(events_array)
-        
+        save_event_or_main_menu(events_array)
      elsif input == '2'
         attractions_array = search_by_keyword
         display_by_keyword(attractions_array)
+        save_event_or_main_menu(attractions_array)
     # elsif input == 3
     #     random_event
+    # save_event_or_main_menu 
     # elsif input == 4
     #     create_event
     # elsif input == 5
     #     user.event_planner
     elsif input == '6'
         delete_account
+    elsif input == '7'
+        puts "See ya later!"
+        exit
     else
         invalid_input
         pick_option
-    end 
+    end
 end 
 
 #takes user input and searches; returns an array
@@ -134,9 +138,6 @@ def search_by_keyword
     attractions[0...20]
 end
 
-# attractions[0]['name']
-# attractions[0]['url']
-
 #takes the return of search_by method option 1 and displays them in a readable manner
 def display_events_by_city(events_array)
     events_array.each_with_index do |event, index|
@@ -147,20 +148,15 @@ def display_events_by_city(events_array)
         url = event["url"] || 'nil'
         print "#{name} \n #{date} \n #{url} \n "
         if Event.find_by(event_type: url) == nil
-            create_event(name, date , url)
+            $event = create_event(name, date , url)
         end 
         line
         space(2)
     end
 end 
 
-def create_event(name = nil, date = nil, url = nil)
-    Event.create(name: name, date: date, event_type: url)
-end 
-
 # takes the return of search_by method option 2 and displays them in a readable manner
 def display_by_keyword(attractions_array)
-    
     attractions_array.each_with_index do |attraction, index|
         puts (index+1).to_s + '.'
         line
@@ -169,11 +165,29 @@ def display_by_keyword(attractions_array)
         url = attraction["url"] || 'nil'
         print "#{name} \n #{date} \n #{url} \n"
         if Event.find_by(event_type: url) == nil
-            create_event(name, date , url)
+            $event = create_event(name, date , url)
         end 
         line
         space(2)
     end
+end
+
+def save_event_or_main_menu(events_array)
+    puts "Would you like to save any of these events? Type 'y' to save an event or 'n' to go back to the main menu"
+    response = get_input
+    if response == 'y'
+        puts 'To save an event please type the correlating number that corresponds with that event.'
+        events_number = get_input.to_i
+        url = events_array[events_number-1]["url"]
+        event = Event.find_by(event_type: url)
+        save_event(event.id)
+        # userevent.save => saves selected event to userevent table
+    
+    elsif response == 'n'
+        present_menu_options
+    end
+
+    
 end
 
 #====================================================================================================================
@@ -183,8 +197,6 @@ def run
 welcome_user
 login_or_create_user
 present_menu_options
-
-pick_option
 end
 #====================================================================================================================
 #====================================================================================================================
@@ -192,6 +204,15 @@ end
 #helper methods
 def get_input
     gets.chomp
+end
+
+#create methods
+def create_event(name = nil, date = nil, url = nil)
+    Event.create(name: name, date: date, event_type: url)
+end 
+
+def save_event(event_id)
+    UserEvent.create(user_id: $logged_in.id, event_id: event_id) 
 end
 
 #message helper methods
