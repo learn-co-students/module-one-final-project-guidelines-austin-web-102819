@@ -31,7 +31,7 @@ def login_user
         puts "Welcome back #{username}!"
         line
         space(1)
-        $logged_in = logged_in_user.id
+        $logged_in = logged_in_user
     else 
         puts "Sorry, username does not exist."
         login_or_create_user
@@ -49,8 +49,30 @@ def create_user
     else
     logged_in_user = User.create(username: username)
     puts "Welcome #{username}!"
-    $logged_in = logged_in_user.id
+    $logged_in = logged_in_user
     end
+end 
+
+# If user wants to delete account, they will go through this option.
+def delete_account
+    puts 'Are you sure you would like to delete your account?'
+    puts "(y/n?)"
+    answer = get_input
+    if answer == 'y'
+        puts "Please enter your username: "
+        input = get_input
+        if User.find_by(username: input) == $logged_in
+            User.find_by(username: input).destroy
+            puts "Thank you. Come again!"
+            present_menu_options
+        else
+            puts "You jerk. You can only delete your account."
+            binding.pry
+        end 
+    else
+        present_menu_options
+    end  
+
 end 
 
 #gives user a list of options to choose from
@@ -62,7 +84,8 @@ def present_menu_options
     puts '3. pick an event for me'
     puts '4. host an event'
     puts '5. view my event calander'
-    puts '6. exit'
+    puts '6. Delete my account'
+    puts '7. exit'
     space(1)
 end 
 
@@ -82,8 +105,8 @@ def pick_option
     #     create_event
     # elsif input == 5
     #     user.event_planner
-    # elsif input == 6
-    #     puts "Thank you!"
+    elsif input == '6'
+        delete_account
     else
         invalid_input
         pick_option
