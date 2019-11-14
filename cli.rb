@@ -3,8 +3,8 @@ require_relative 'config/environment'
 #welcomes the user
 def welcome_user
     puts "Welcome to Ticketmaster Lite!"
-    puts "==========================="
-   space(1)
+    double_line
+    space(1)
 end 
 
 #ask user if they have an account then login or create one
@@ -38,10 +38,6 @@ def login_user
     end 
 end 
 
-# create_user method is printing unexpected message :
-# D, [2019-11-13T10:55:58.329297 #35501] DEBUG -- :    (1.1ms)  SELECT sqlite_version(*)
-# D, [2019-11-13T10:55:58.657780 #35501] DEBUG -- :   User Load (0.3ms)  SELECT "users".* FROM "users" WHERE "users"."username" = ? LIMIT ?  [["username", "Jimbo"], ["LIMIT", 1]]"
-
 #If user doesn't exsist create one else log in user
 def create_user
     puts "Create a username:"
@@ -60,7 +56,7 @@ end
 #gives user a list of options to choose from
 def present_menu_options
     puts "Pick a number. Any number."
-    space(2)
+    space(1)
     puts '1. search for events by city'
     puts '2. search by keyword'
     puts '3. pick an event for me'
@@ -178,7 +174,7 @@ def line
 end 
 
 def double_line
-    puts '============================'
+    puts "============================="
 end
 
 ### NOTES
