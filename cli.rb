@@ -121,12 +121,22 @@ end
 def display_events_by_city(events_array)
     events_array.each do |event|
         line
-        p event["name"]
-        p event["dates"]["start"]["localDate"]
-        p event["url"]
+        name = event["name"]
+        puts name
+        date = event["dates"]["start"]["localDate"]
+        puts date
+        url = event["url"]
+        puts url
+        if Event.find_by(event_type: url) == nil
+            create_event(name, date , url)
+        end 
         line
         space(2)
     end
+end 
+
+def create_event(name = nil, date = nil, url = nil)
+    Event.create(name: name, date: date, event_type: url)
 end 
 
 # takes the return of search_by method option 2 and displays them in a readable manner
