@@ -76,6 +76,7 @@ def pick_option
     if input == '1'
         events_array = search_by_city
         display_events_by_city(events_array)
+        
      elsif input == '2'
         attractions_array = search_by_keyword
         display_by_keyword(attractions_array)
@@ -119,11 +120,12 @@ end
 
 #takes the return of search_by method option 1 and displays them in a readable manner
 def display_events_by_city(events_array)
-    events_array.each do |event|
+    events_array.each_with_index do |event, index|
+        puts index.to_s + '.' 
         line
-        p event["name"]
-        p event["dates"]["start"]["localDate"]
-        p event["url"]
+        puts event["name"]
+        puts event["dates"]["start"]["localDate"]
+        puts event["url"]
         line
         space(2)
     end
