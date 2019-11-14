@@ -118,31 +118,28 @@ end
 def make_request(test_url)
     response = RestClient.get(test_url)
     parsed_response = JSON(response)
-    
+    binding.pry
     
     ingredient_array = parsed_response["recipes"][0]["extendedIngredients"]  
-    x = get_ingredient_array(ingredient_array)#join(",")
     recipe_name = parsed_response["recipes"][0]["title"]
     cost_per_serving = parsed_response["recipes"][0]["pricePerServing"] 
-  binding.pry  
+
+
+    x = get_ingredient_array(ingredient_array)
 end 
 
+#create ingredient array
 def get_ingredient_array(ingredient_array)
-ingredient_array.map do |k|
-    k["original"]
     
-end
-
+    arr = ingredient_array.map do |k|
+    
+        k["original"]
+    end
+# binding.pry
+    Recipe.create_recipe(arr)
 end 
-
-<<<<<<< HEAD
-# make_request(TEST_URL)
 
 run
-=======
-make_request(TEST_URL)
-#Recipe.new(name: "", ingredient: k["original"])
-#     ingredient_array.select {|k,v| k == "original"}
-#     binding.pry
 
->>>>>>> 41c601a7b74dba27fb3d4c52d621fa7673691848
+make_request(TEST_URL)
+

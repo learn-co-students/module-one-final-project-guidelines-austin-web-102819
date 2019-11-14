@@ -6,6 +6,13 @@ class Recipe < ActiveRecord::Base
         # Recipe.meals.all.find_by[]
 
     end
+
+    def self.create_recipe(ingredient_array)
+        ingredient_array.each do |i|
+            binding.pry
+            Recipe.create(ingredient: i)
+        end
+    end 
 end 
 <<<<<<< HEAD
 =======
