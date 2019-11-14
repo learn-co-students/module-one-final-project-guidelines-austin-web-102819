@@ -8,25 +8,39 @@ require 'json'
 $current_user=nil
 # Output welcome message
 def welcome
-puts "Welcome to the WordBank App!"
-puts "==========================="
+puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+
+puts "██╗    ██╗ ██████╗ ██████╗ ██████╗ ██████╗  █████╗ ███╗   ██╗██╗  ██╗
+██║    ██║██╔═══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗████╗  ██║██║ ██╔╝
+██║ █╗ ██║██║   ██║██████╔╝██║  ██║██████╔╝███████║██╔██╗ ██║█████╔╝ 
+██║███╗██║██║   ██║██╔══██╗██║  ██║██╔══██╗██╔══██║██║╚██╗██║██╔═██╗ 
+╚███╔███╔╝╚██████╔╝██║  ██║██████╔╝██████╔╝██║  ██║██║ ╚████║██║  ██╗
+ ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚═════╝ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ "
+                                                                                   
+puts "============================================================================== \n
+                           Welcome to the WordBank App!" 
+puts "\n=============================================================================="
+puts "******************************************************************************"
+puts "=============================================================================="
 end
 #Username creation
 
 def user_name #This is working on the User model
-    puts "Please create a username to create your account:"
-    puts "==================================="
+    puts "\n               Please create a username to create your account: \n\n"
+    puts "=============================================================================="
     name= gets.chomp
+    puts "=============================================================================="
     puts "Your username is: #{name}"
     user_object = User.create(name: name)
     $current_user= user_object
+    puts "******************************************************************************"
     puts "Thanks for opening an account with WordBank!"
-    puts "====================================="
+    puts "******************************************************************************"
     user_object
 end
 
 def search_prompt #this is working on the Word model
-    puts "You can now search for any word. Enter your word below and hit 'Enter'"
+    puts "You can now search for any word. Type your word below and hit 'Enter'"
     word = gets.chomp
 
 end
@@ -57,9 +71,9 @@ def get_definition(user_object, word_array)
     word= word_array["word"]
     definition= word_array["results"][0]["definition"]
     speech= word_array["results"][0]["partOfSpeech"]
-    puts "==============================================="
-    puts "#{word}: (#{speech}) #{definition}"
-    puts "==============================================="
+    puts "==============================================================================\n"
+    puts "\n*** #{word}: (#{speech}) #{definition} *** \n"
+    puts "\n==============================================================================\n"
     create_word= Word.create(word: word, definition: definition, part_of_speech: speech)
     new_word_list_item= WordList.create(user_id: user_object.id, word_id: create_word.id)
 end
@@ -79,41 +93,43 @@ def search_again
 end
 
 def list_or_quit
+    puts "==============================================================================\n"
     puts "Do you want to quit or view your WordBank? (quit/wordbank)"
     response=gets.chomp
 
-    if response == "wordbank"
-        $current_user.words.each do |word|
-            puts "#{word.word}: #{word.definition}"
-        end
+    if response == "quit" 
+        quit_program
         # binding.pry
-         
     else
-        puts "Goodbye! Thanks for using WordBank!"
-    end 
+    puts "=============================================================================="
+    puts "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
+    puts "==============================================================================\n"
+    puts "          __   __   __   __                    
+    |  | /  \\ |__) |  \\ |__)  /\\  |\\ | |__/    
+    |/\\| \\__/ |  \\ |__/ |__) /~~\\ | \\| |  \\    
+                                               "
+     
+    $current_user.words.each do |word|
+        puts "               #{word.word}: #{word.definition} \n"
+        end
+        puts "\n=============================================================================="
+        puts "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
+        puts "=============================================================================="
+    end
 end
-    # if answer == "y"
-    #     word=search_prompt
-    #     api_url=build_url(word)
-    #     word_array=make_request(api_url)
-    #     get_definition($current_user, word_array)
-
-
-
-    # else
-    #     puts "Goodbye, thanks for using"
-    # end
-
-
-
-# make_request(build_url("create"))
-# get_definition(make_request())
-
-# url= build_url("joke")
-# word_array= make_request(url)
-# get_definition(word_array)
-
-
-# This works when we put all the work inside the user_name method.
-# This is because the save_word method cannot access the variables in user_name and search_word
-# Next steps: Chain the methods together by passing in the first two methods as arguments: save_word(user_name, search_word)
+  
+def quit_program
+    puts "=============================================================================="
+    puts "
+    ██████╗  ██████╗  ██████╗ ██████╗ ██████╗ ██╗   ██╗███████╗██╗
+   ██╔════╝ ██╔═══██╗██╔═══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝██╔════╝██║
+   ██║  ███╗██║   ██║██║   ██║██║  ██║██████╔╝ ╚████╔╝ █████╗  ██║
+   ██║   ██║██║   ██║██║   ██║██║  ██║██╔══██╗  ╚██╔╝  ██╔══╝  ╚═╝
+   ╚██████╔╝╚██████╔╝╚██████╔╝██████╔╝██████╔╝   ██║   ███████╗██╗
+    ╚═════╝  ╚═════╝  ╚═════╝ ╚═════╝ ╚═════╝    ╚═╝   ╚══════╝╚═╝
+                                                                  
+   "
+    puts "Goodbye! Thanks for using WordBank!"
+    puts "=============================================================================="
+    exit
+end
