@@ -120,7 +120,7 @@ def search_by_city
     url = "https://app.ticketmaster.com/discovery/v2/events?apikey=pyLDDCYURYJ8LZfAUnOayESRsPBTWnKM&locale=*&city="+ city
     response = RestClient.get(url)
     events = JSON.parse(response)["_embedded"]["events"]
-    events_array = events[0...19]
+    events_array = events[0...20]
     events_array
 end
 
@@ -128,10 +128,10 @@ end
 def search_by_keyword
     puts "What do you want to search for?"
     keyword = get_input
-    url = "https://app.ticketmaster.com/discovery/v2/attractions?apikey=pyLDDCYURYJ8LZfAUnOayESRsPBTWnKM&keyword="+ keyword +"&locale=*"
+    url = "https://app.ticketmaster.com/discovery/v2/events?apikey=pyLDDCYURYJ8LZfAUnOayESRsPBTWnKM&keyword=#{keyword}&locale=en"
     response = RestClient.get(url)
-    attractions = JSON.parse(response)["_embedded"]["attractions"]
-    attractions[0...19]
+    attractions = JSON.parse(response)["_embedded"]["events"]
+    attractions[0...20]
 end
 
 # attractions[0]['name']
@@ -140,14 +140,12 @@ end
 #takes the return of search_by method option 1 and displays them in a readable manner
 def display_events_by_city(events_array)
     events_array.each_with_index do |event, index|
-        puts index.to_s + '.' 
+        puts (index+1).to_s + '.' 
         line
-        name = event["name"]
-        puts name
-        date = event["dates"]["start"]["localDate"]
-        puts date
-        url = event["url"]
-        puts url
+        name = event["name"]  || 'nil'
+        date = event["dates"]["start"]["localDate"] || 'nil'
+        url = event["url"] || 'nil'
+        print "#{name} \n #{date} \n #{url} \n "
         if Event.find_by(event_type: url) == nil
             create_event(name, date , url)
         end 
@@ -163,10 +161,16 @@ end
 # takes the return of search_by method option 2 and displays them in a readable manner
 def display_by_keyword(attractions_array)
     
-    attractions_array.each do |attractions|
+    attractions_array.each_with_index do |attraction, index|
+        puts (index+1).to_s + '.'
         line
-        p attractions["name"]
-        p attractions["url"]
+        name = attraction["name"] || 'nil'
+        date = attraction["dates"]["start"]["localDate"] || 'nil'
+        url = attraction["url"] || 'nil'
+        print "#{name} \n #{date} \n #{url} \n"
+        if Event.find_by(event_type: url) == nil
+            create_event(name, date , url)
+        end 
         line
         space(2)
     end
