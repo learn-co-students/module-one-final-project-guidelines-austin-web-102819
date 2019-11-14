@@ -94,11 +94,11 @@ def pick_option
     if input == '1'
         events_array = search_by_city
         display_events_by_city(events_array)
-        save_event_or_main_menu
+        save_event_or_main_menu(events_array)
      elsif input == '2'
         attractions_array = search_by_keyword
         display_by_keyword(attractions_array)
-        save_event_or_main_menu
+        save_event_or_main_menu(attractions_array)
     # elsif input == 3
     #     random_event
     # save_event_or_main_menu 
@@ -148,7 +148,7 @@ def display_events_by_city(events_array)
         url = event["url"] || 'nil'
         print "#{name} \n #{date} \n #{url} \n "
         if Event.find_by(event_type: url) == nil
-            create_event(name, date , url)
+            $event = create_event(name, date , url)
         end 
         line
         space(2)
@@ -165,23 +165,25 @@ def display_by_keyword(attractions_array)
         url = attraction["url"] || 'nil'
         print "#{name} \n #{date} \n #{url} \n"
         if Event.find_by(event_type: url) == nil
-            create_event(name, date , url)
+            $event = create_event(name, date , url)
         end 
         line
         space(2)
     end
 end
 
-def save_event_or_main_menu
-    puts "Would you like to save any of these events? Type 'y to save an event or 'n to go back to the main menu"
-    x = get_input
-    if x == 'y'
-        puts 'To save one or more event(s) please type the correlating number(s) separated by commas. e.g. "1,2,3"'
-        # input = get_input
-        # if input == #something
-        #     #userevent.save => saves selected event to userevent table
-        # end
-    elsif x == 'n'
+def save_event_or_main_menu(events_array)
+    puts "Would you like to save any of these events? Type 'y' to save an event or 'n' to go back to the main menu"
+    response = get_input
+    if response == 'y'
+        puts 'To save an event please type the correlating number that corresponds with that event.'
+        events_number = get_input.to_i
+        url = events_array[events_number-1]["url"]
+        event = Event.find_by(event_type: url)
+        save_event(event.id)
+        # userevent.save => saves selected event to userevent table
+    
+    elsif response == 'n'
         present_menu_options
     end
 
@@ -208,6 +210,10 @@ end
 def create_event(name = nil, date = nil, url = nil)
     Event.create(name: name, date: date, event_type: url)
 end 
+
+def save_event(event_id)
+    UserEvent.create(user_id: $logged_in.id, event_id: event_id) 
+end
 
 #message helper methods
 def invalid_input
