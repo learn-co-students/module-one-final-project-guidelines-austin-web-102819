@@ -128,20 +128,24 @@ end
 def search_by_city
     space(1)
     puts "Where would you like to look?"
+    space(1)
     city = get_input
-    today = DateTime.new(2001,2,3,4,5,4)
-    p today
     url = "https://app.ticketmaster.com/discovery/v2/events?apikey=pyLDDCYURYJ8LZfAUnOayESRsPBTWnKM&locale=*&city=#{city}&sort=date,asc"
     response = RestClient.get(url)
-    events = JSON.parse(response)["_embedded"]["events"]
-    events_array = events[0...20]
-    events_array
+    if JSON.parse(response).key?("_embedded")
+        events = JSON.parse(response)["_embedded"]["events"]
+        events[0...20]
+    else
+        puts "This search received no results. Try again."
+        search_by_city
+    end
 end
 
 #takes user input and searches; returns an array
 def search_by_keyword
     space(1)
     puts "What do you want to search for?"
+    space(1)
     keyword = get_input
     url = "https://app.ticketmaster.com/discovery/v2/events?apikey=pyLDDCYURYJ8LZfAUnOayESRsPBTWnKM&keyword=#{keyword}&locale=en&sort=date,asc"
     response = RestClient.get(url)
@@ -151,6 +155,10 @@ end
 
 #takes the return of search_by method option 1 and displays them in a readable manner
 def display_events_by_city(events_array)
+    if events_array.length == 0
+        puts "Sorry there are no results for your search!"
+        present_menu_options
+    end
     events_array.each_with_index do |event, index|
         puts (index+1).to_s + '.' 
         line
@@ -164,9 +172,7 @@ def display_events_by_city(events_array)
         line
         space(2)
     end
-    double_line
-    puts "To vist an event URL hold command and left click!"
-    double_line
+    click?
 end 
 
 # takes the return of search_by method option 2 and displays them in a readable manner
@@ -184,9 +190,7 @@ def display_by_keyword(attractions_array)
         line
         space(2)
     end
-    double_line
-    puts "To vist an event URL hold command and left click!"
-    double_line
+    click?
 end
 
 def save_event_or_main_menu(events_array)
@@ -201,6 +205,9 @@ def save_event_or_main_menu(events_array)
         url = events_array[events_number-1]["url"]
         event = Event.find_by(event_type: url)
         save_event(event.id)
+        puts "You saved #{event.name}!" #dont know why it's breaking here..
+        space(1)
+        present_menu_options
     elsif response == 'n'
         present_menu_options
     end
@@ -209,13 +216,26 @@ end
 def display_user_events
     space(1)
     puts "Here's a list of your events!"
-    puts "For more info and to even purchase a ticket hold command and left click the URL!"
     line
     space(1)
     user_events = UserEvent.select{|event| event.user_id == $logged_in.id}
     event_objects = user_events.map{|ueo| Event.find(ueo.event_id)}
     event_objects.each_with_index { |eo, index| print  "#{index+1}. #{eo.name} \n #{eo.date} \n #{eo.event_type} \n" }
+    space(2)
+    click?
+    space(2)
+    puts "Nice events! Press the enter key for main menu."
+    end_of_display_user_events
+end
 
+def end_of_display_user_events
+    input = get_input
+    if input == ""
+        present_menu_options
+    else
+        invalid_input
+        end_of_display_user_events
+    end
 end
 
 #====================================================================================================================
@@ -238,6 +258,12 @@ def get_input
         print "User > "
         gets.chomp
     end
+end
+
+def click?
+    double_line
+    puts "To see more about an event hold command and left click the URL!"
+    double_line
 end
 
 #create methods
@@ -263,11 +289,11 @@ def space(num)
 end 
 
 def line
-    puts "-"*50
+    puts "-"*65
 end 
 
 def double_line
-    puts "="*50
+    puts "="*65
 end
 
 ### NOTES
