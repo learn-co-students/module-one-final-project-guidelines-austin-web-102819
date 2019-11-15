@@ -90,6 +90,7 @@ def delete_account
         else
             space(1)
             puts "You jerk. You can only delete your account."
+            line
             present_menu_options
         end 
     else
@@ -162,8 +163,13 @@ def search_by_keyword
     keyword = get_input
     url = "https://app.ticketmaster.com/discovery/v2/events?apikey=pyLDDCYURYJ8LZfAUnOayESRsPBTWnKM&keyword=#{keyword}&locale=en&sort=date,asc"
     response = RestClient.get(url)
-    attractions = JSON.parse(response)["_embedded"]["events"]
-    attractions[0...20]
+    if JSON.parse(response)["_embedded"]["events"]
+        attractions = JSON.parse(response)["_embedded"]["events"]
+        attractions[0...20]
+    else
+        puts "Sorry, your search returned no results. Try again."
+        search_by_city
+    end
 end
 
 #takes the return of search_by method option 1 and displays them in a readable manner
@@ -190,6 +196,10 @@ end
 
 # takes the return of search_by method option 2 and displays them in a readable manner
 def display_by_keyword(attractions_array)
+    if attractions_array.length == 0
+        puts  "Sorry, your search returned no results. Try again."
+        present_menu_options
+    end
     attractions_array.each_with_index do |attraction, index|
         puts (index+1).to_s + '.'
         line
@@ -238,6 +248,11 @@ def display_user_events
     space(1)
     user_events = UserEvent.select{|event| event.user_id == $logged_in.id}
     event_objects = user_events.map{|ueo| Event.find(ueo.event_id)}
+    if event_objects.length == 0
+        puts "Womp, womp. It looks like you haven't saved any events! Press the enter key for main menu."
+        line
+        end_of_display_user_events
+    end
     event_objects.each_with_index { |eo, index| 
     space(2)
     puts (index+1).to_s + '.' 
@@ -248,16 +263,6 @@ def display_user_events
     space(2)
     puts "Nice events! Press the enter key for main menu."
     end_of_display_user_events
-end
-
-def end_of_display_user_events
-    input = get_input
-    if input == ""
-        present_menu_options
-    else
-        invalid_input
-        end_of_display_user_events
-    end
 end
 
 #====================================================================================================================
@@ -276,7 +281,7 @@ end
 def get_input
     if $logged_in
         print "#{$logged_in.username} > "
-        gets.chomp 
+        gets.chomp
     else
         print "User > "
         gets.chomp
@@ -287,6 +292,16 @@ def click?
     double_line
     puts "To see more about an event hold command and left click the URL!"
     double_line
+end
+
+def end_of_display_user_events
+    input = get_input
+    if input == ""
+        present_menu_options
+    else
+        invalid_input
+        end_of_display_user_events
+    end
 end
 
 #create methods
