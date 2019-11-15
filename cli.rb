@@ -1,9 +1,20 @@
 require_relative 'config/environment'
 require 'date'
 
+def tml
+    space(50)
+    puts '████████╗██╗ ██████╗██╗  ██╗███████╗████████╗███╗   ███╗ █████╗ ███████╗████████╗███████╗██████╗     ██╗     ██╗████████╗███████╗'
+    puts '╚══██╔══╝██║██╔════╝██║ ██╔╝██╔════╝╚══██╔══╝████╗ ████║██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗    ██║     ██║╚══██╔══╝██╔════╝'
+    puts '   ██║   ██║██║     █████╔╝ █████╗     ██║   ██╔████╔██║███████║███████╗   ██║   █████╗  ██████╔╝    ██║     ██║   ██║   █████╗  '
+    puts '   ██║   ██║██║     ██╔═██╗ ██╔══╝     ██║   ██║╚██╔╝██║██╔══██║╚════██║   ██║   ██╔══╝  ██╔══██╗    ██║     ██║   ██║   ██╔══╝  '
+    puts '   ██║   ██║╚██████╗██║  ██╗███████╗   ██║   ██║ ╚═╝ ██║██║  ██║███████║   ██║   ███████╗██║  ██║    ███████╗██║   ██║   ███████╗'
+    puts '   ╚═╝   ╚═╝ ╚═════╝╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝    ╚══════╝╚═╝   ╚═╝   ╚══════╝'
+    puts '                                                                                                                                 '
+end
+
 #welcomes the user
 def welcome_user
-    space(50)
+    space(5)
     puts "Welcome to Ticketmaster Lite!"
     double_line
     space(1)
@@ -77,7 +88,9 @@ def delete_account
             puts "Sorry to see you go, come back soon!"
             exit
         else
+            space(1)
             puts "You jerk. You can only delete your account."
+            present_menu_options
         end 
     else
         run
@@ -93,7 +106,7 @@ def present_menu_options
     puts '2. Search for events by artist or sports team'
     puts '3. See what I have coming up'
     puts '4. Delete my account'
-    puts '5. exit'
+    puts '5. Exit'
     space(1)
     pick_option
 end 
@@ -115,7 +128,7 @@ def pick_option
         delete_account
      elsif input == '5'
         space(1)
-        puts "Thanks for checking us out. See ya later!"
+        puts "#{$logged_in.username}, thanks for checking us out. See ya later!"
         exit
      else
         space(1)
@@ -136,7 +149,7 @@ def search_by_city
         events = JSON.parse(response)["_embedded"]["events"]
         events[0...20]
     else
-        puts "This search received no results. Try again."
+        puts "Sorry, your search returned no results. Try again."
         search_by_city
     end
 end
@@ -156,7 +169,7 @@ end
 #takes the return of search_by method option 1 and displays them in a readable manner
 def display_events_by_city(events_array)
     if events_array.length == 0
-        puts "Sorry there are no results for your search!"
+        puts  "Sorry, your search returned no results. Try again."
         present_menu_options
     end
     events_array.each_with_index do |event, index|
@@ -165,7 +178,7 @@ def display_events_by_city(events_array)
         name = event["name"]  || 'nil'
         date = event["dates"]["start"]["localDate"] || 'nil'
         url = event["url"] || 'nil'
-        print "#{name} \n #{date} \n #{url} \n "
+        puts "Name: #{name}\nDate: #{date}\nURL: #{url}\n"
         if Event.find_by(event_type: url) == nil
             $event = create_event(name, date , url)
         end 
@@ -183,7 +196,7 @@ def display_by_keyword(attractions_array)
         name = attraction["name"] || 'nil'
         date = attraction["dates"]["start"]["localDate"] || 'nil'
         url = attraction["url"] || 'nil'
-        print "#{name} \n #{date} \n #{url} \n"
+        puts "Name: #{name}\nDate: #{date}\nURL: #{url}\n" 
         if Event.find_by(event_type: url) == nil
             $event = create_event(name, date , url)
         end
@@ -201,26 +214,35 @@ def save_event_or_main_menu(events_array)
     if response == 'y'
         space(1)
         puts 'To save an event please type the correlating number that corresponds with that event.'
+        space(1)
         events_number = get_input.to_i
         url = events_array[events_number-1]["url"]
         event = Event.find_by(event_type: url)
         save_event(event.id)
-        puts "You saved #{event.name}!" #dont know why it's breaking here..
+        space(1)
+        puts "You saved #{event.name}!"
         space(1)
         present_menu_options
     elsif response == 'n'
         present_menu_options
+    else 
+        invalid_input
+        save_event_or_main_menu(events_array)
     end
 end
 
 def display_user_events
     space(1)
     puts "Here's a list of your events!"
-    line
+    double_line
     space(1)
     user_events = UserEvent.select{|event| event.user_id == $logged_in.id}
     event_objects = user_events.map{|ueo| Event.find(ueo.event_id)}
-    event_objects.each_with_index { |eo, index| print  "#{index+1}. #{eo.name} \n #{eo.date} \n #{eo.event_type} \n" }
+    event_objects.each_with_index { |eo, index| 
+    space(2)
+    puts (index+1).to_s + '.' 
+    line
+    puts "Name: #{eo.name}\nDate: #{eo.date}\nURL: #{eo.event_type}\n"} # "#{index+1}. \n  
     space(2)
     click?
     space(2)
@@ -242,9 +264,10 @@ end
 #====================================================================================================================
 #THE BIG CHULUPA 
 def run
-welcome_user
-login_or_create_user
-present_menu_options
+    tml
+    welcome_user
+    login_or_create_user
+    present_menu_options
 end
 #====================================================================================================================
 #====================================================================================================================
